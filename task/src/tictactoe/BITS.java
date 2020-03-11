@@ -1,9 +1,9 @@
 package tictactoe;
 
 enum BITS {
-    EMPTY('_', (short) 0b00),
-    X('X', (short) 0b01),
-    O('O', (short) 0b10);
+    EMPTY('_', (short) 0),
+    X('X', (short) 1),
+    O('O', (short) 2);
 
     private char name;
     private short value;
@@ -25,6 +25,15 @@ enum BITS {
         for (BITS bits : BITS.values()) {
             if (bits.getName() == name) {
                 return bits.getValue();
+            }
+        }
+        return 0;
+    }
+
+    public static char getName(short value) {
+        for (BITS bits : BITS.values()) {
+            if (bits.getValue() == value) {
+                return bits.getName();
             }
         }
         return 0;
