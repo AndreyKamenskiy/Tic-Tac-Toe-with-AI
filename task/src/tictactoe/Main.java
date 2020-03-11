@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) {
         //Start project
         Scanner scanner = new Scanner(System.in);
-// test git 
+
+        System.out.print("Hello world!!!");
     }
 }
