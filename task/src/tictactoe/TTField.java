@@ -1,6 +1,7 @@
 package tictactoe;
 
 import static tictactoe.Condition.*;
+import static tictactoe.GameStatus.*;
 
 class TTField {
     //String field; // like "XO___XO"
@@ -56,13 +57,6 @@ class TTField {
         if ( x > 3 || x < 1 || y > 3 || y < 1) {
             System.exit(1); //todo change to Exception;
         }
-        /*int q = (y - 1) * 3 + x - 1;
-        var w = Math.pow(3, q);
-        var e = (field / (short) w);
-        var r = e % 3;*/
-
-            //  3333
-
         switch ((field / (short) Math.pow(3, (y - 1) * 3 + x - 1)) % 3) {
             case 1:
                 return X;
@@ -95,5 +89,65 @@ class TTField {
         setField(arr);
     }
 
+    public GameStatus getGameStatus() {
+        Condition[][] f= toArray();
+        // check for wins
+
+        for (int i = 0; i < 3; i++) {
+            //columns
+            if (f[0][i] == f[1][i] && f[1][i] == f[2][i] && f[0][i] != EMPTY) {
+                if (f[0][i] == X) {
+                    return X_WIN;
+                } else {
+                    return Y_WIN;
+                }
+            }
+            //rows
+            if (f[i][0] == f[i][1] && f[i][1] == f[i][2] && f[i][0] != EMPTY) {
+                if (f[i][0] == X) {
+                    return X_WIN;
+                } else {
+                    return Y_WIN;
+                }
+            }
+        }
+
+        //diagonals
+        if (((f[1][1] == f[0][0] && f[1][1] == f[2][2])
+            || (f[1][1] == f[0][2] && f[1][1] == f[2][0]))
+            && f[1][1] != EMPTY) {
+            if (f[1][1] == X) {
+                return X_WIN;
+            } else {
+                return Y_WIN;
+            }
+        }
+
+        // check for finished and draw.
+        int xCount = 0;
+        int oCount = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                switch (f[i][j]) {
+                    case X:
+                        xCount++;
+                        break;
+                    case O:
+                        oCount++;
+                        break;
+                }
+            }
+        }
+
+        if (xCount + oCount == 9) {
+            return DRAW;
+        }
+
+        if (xCount == oCount ) {
+            return X_TURN;
+        }
+
+        return O_TURN;
+    }
 
 }
