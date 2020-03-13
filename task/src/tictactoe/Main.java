@@ -6,37 +6,50 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
-        String str =  "OOO" +
-                      "_X_" +
-                      "XOO";
+       Scanner scanner = new Scanner(System.in);
+       System.out.print("Enter cells: ");
+       String stringFormat = scanner.nextLine();
+       TTGame ttGame = new TTGame();
+       ttGame.setField(stringFormat);
+       ttGame.showfield();
+       int x,y;
 
-        TTField field = new TTField(str);
-        Condition[][] f = field.toArray();
-        for (int i = 2; i >=0 ; i--) {
-            System.out.println(Arrays.toString(f[i]));
-        }
+       boolean validAnswer = false;
+       do {
+           System.out.print("Enter the coordinates: ");
+           String coord = scanner.nextLine();
+           try {
+              String[] arr = coord.split("\\s+");
+              x = Integer.parseInt(arr[0]);
+              y = Integer.parseInt(arr[1]);
 
-        for (int y = 3; y > 0 ; y--) {
-            for (int x = 3; x > 0 ; x--) {
-                System.out.print(field.getCellXY(x,y).getName() + " ");
-            }
-            System.out.print("\n");
-        }
+           } catch (NumberFormatException e) {
+                System.out.println("You should enter numbers!");
+                continue;
+           } catch (ArrayIndexOutOfBoundsException e) {
+               System.out.println("You should enter 2 numbers!");
+               continue;
+           }
 
-        for (int y = 3; y > 0 ; y--) {
-            for (int x = 3; x > 0 ; x--) {
-                field.setCellXY(x, y, Condition.X);
-            }
-        }
-        field.setCellXY(2, 2, Condition.O);
+           if ( x < 1 || x > 3 || y < 1 || y > 3) {
+               System.out.print("Coordinates should be from 1 to 3!\n");
+                continue;
+           }
 
-        for (int y = 3; y > 0 ; y--) {
-            for (int x = 3; x > 0 ; x--) {
-                System.out.print(field.getCellXY(x,y).getName() + " ");
-            }
-            System.out.print("\n");
-        }
+           if (!ttGame.getField().isCellXYEmpty(x, y)) {
+               System.out.print("This cell is occupied! Choose another one!\n");
+               continue;
+           }
+
+           validAnswer = true;
+
+       } while (!validAnswer);
+
+
+
+
 
     }
 }

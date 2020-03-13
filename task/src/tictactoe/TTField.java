@@ -7,7 +7,7 @@ class TTField {
     short field; // 3^9 = 19683 so short will be enough;
     //lets take ternary system 0 = '_', 1=X ,2 = O
 
-    TTField (String StringFormat){
+    TTField (String stringFormat){
         /*
         *  not logic string format
         *  [13(s0) 23(s1) 33(s2)]
@@ -18,8 +18,8 @@ class TTField {
         short[][] f = new short[3][3];
         for (int i = 2; i >= 0; i--) {
             for (int j = 0; j < 3; j++) {
-                f[i][j] = Condition.getValue(StringFormat.charAt(counter));
-                System.out.printf("i=%d j=%d count=%d\n",i,j,counter);
+                f[i][j] = Condition.getValue(stringFormat.charAt(counter));
+//                System.out.printf("i=%d j=%d count=%d\n",i,j,counter);
                 counter++;
             }
         }
@@ -56,6 +56,12 @@ class TTField {
         if ( x > 3 || x < 1 || y > 3 || y < 1) {
             System.exit(1); //todo change to Exception;
         }
+        /*int q = (y - 1) * 3 + x - 1;
+        var w = Math.pow(3, q);
+        var e = (field / (short) w);
+        var r = e % 3;*/
+
+            //  3333
 
         switch ((field / (short) Math.pow(3, (y - 1) * 3 + x - 1)) % 3) {
             case 1:
