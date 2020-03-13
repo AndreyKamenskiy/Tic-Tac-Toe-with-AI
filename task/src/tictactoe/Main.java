@@ -14,7 +14,8 @@ public class Main {
        TTGame ttGame = new TTGame();
        ttGame.setField(stringFormat);
        ttGame.showfield();
-       int x,y;
+       int x = 5;
+       int y = 5;
 
        boolean validAnswer = false;
        do {
@@ -47,9 +48,12 @@ public class Main {
 
        } while (!validAnswer);
 
-
-
-
+       if (!ttGame.makeMoveXY(x, y)) {
+           System.out.print("Error occupied when try to make move!");
+           System.exit(1);
+       }
+       ttGame.showfield();
+       System.out.println(ttGame.getStatus());
 
     }
 }

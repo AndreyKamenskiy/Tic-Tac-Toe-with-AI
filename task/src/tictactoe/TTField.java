@@ -99,7 +99,7 @@ class TTField {
                 if (f[0][i] == X) {
                     return X_WIN;
                 } else {
-                    return Y_WIN;
+                    return O_WIN;
                 }
             }
             //rows
@@ -107,7 +107,7 @@ class TTField {
                 if (f[i][0] == X) {
                     return X_WIN;
                 } else {
-                    return Y_WIN;
+                    return O_WIN;
                 }
             }
         }
@@ -119,7 +119,7 @@ class TTField {
             if (f[1][1] == X) {
                 return X_WIN;
             } else {
-                return Y_WIN;
+                return O_WIN;
             }
         }
 
