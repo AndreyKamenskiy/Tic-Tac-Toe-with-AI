@@ -1,5 +1,7 @@
 package tictactoe;
 
+import static tictactoe.Condition.*;
+
 class TTField {
     //String field; // like "XO___XO"
     short field; // 3^9 = 19683 so short will be enough;
@@ -16,12 +18,11 @@ class TTField {
         short[][] f = new short[3][3];
         for (int i = 2; i >= 0; i--) {
             for (int j = 0; j < 3; j++) {
-                f[i][j] = BITS.getValue(StringFormat.charAt(counter));
+                f[i][j] = Condition.getValue(StringFormat.charAt(counter));
                 System.out.printf("i=%d j=%d count=%d\n",i,j,counter);
                 counter++;
             }
         }
-
         field = 0;
 
         for (int i = 2; i >= 0; i--) {
@@ -31,12 +32,12 @@ class TTField {
         }
     }
 
-    public char[][] toArray() {
+    public Condition[][] toArray() {
         short f = this.field;
-        char[][] res = new char[3][3];
+        Condition[][] res = new Condition[3][3];
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                res[i][j] = BITS.getName((short)(f % 3));
+                res[i][j] = Condition.getCondition((short)(f % 3));
                 f /= 3;
             }
         }
@@ -46,4 +47,47 @@ class TTField {
     public short getfiled() {
         return field;
     }
+
+    /*
+    * x = 1..3, y = 1..3;
+     */
+
+    public Condition getCellXY(int x, int y) {
+        if ( x > 3 || x < 1 || y > 3 || y < 1) {
+            System.exit(1); //todo change to Exception;
+        }
+
+        switch ((field / (short) Math.pow(3, (y - 1) * 3 + x - 1)) % 3) {
+            case 1:
+                return X;
+            case 2:
+                return O;
+        }
+        return EMPTY;
+    }
+
+    public boolean isCellXYEmpty(int x, int y) {
+        return getCellXY(x, y) == EMPTY;
+    }
+
+    private void setField(Condition[][] arr){
+        field = 0;
+        for (int i = 2; i >= 0; i--) {
+            for (int j = 2; j >= 0; j--) {
+                field = (short)((field * 3) + arr[i][j].getValue());
+            }
+        }
+    }
+
+    public void setCellXY(int x, int y, Condition condition) {
+        if ( x > 3 || x < 1 || y > 3 || y < 1) {
+            System.exit(1); //todo change to Exception;
+        }
+
+        Condition[][] arr = toArray();
+        arr[y-1][x-1] = condition;
+        setField(arr);
+    }
+
+
 }
