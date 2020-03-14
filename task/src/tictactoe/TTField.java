@@ -6,8 +6,7 @@ import static tictactoe.Condition.*;
 import static tictactoe.GameStatus.*;
 
 class TTField {
-
-    //TODO: replace everywhere XY for Move;
+    
     //String field; // like "XO___XO"
     short field; // 3^9 = 19683 so short will be enough;
     //lets take ternary system 0 = '_', 1=X ,2 = O
@@ -57,7 +56,10 @@ class TTField {
     * x = 1..3, y = 1..3;
      */
 
-    public Condition getCellXY(int x, int y) {
+    public Condition getCell(Coordinates coordinates) {
+        final int x = coordinates.x;
+        final int y = coordinates.y;
+
         if ( x > 3 || x < 1 || y > 3 || y < 1) {
             System.exit(1); //todo change to Exception;
         }
@@ -70,8 +72,8 @@ class TTField {
         return EMPTY;
     }
 
-    public boolean isCellXYEmpty(int x, int y) {
-        return getCellXY(x, y) == EMPTY;
+    public boolean isCellEmpty(Coordinates coordinates) {
+        return getCell(coordinates) == EMPTY;
     }
 
     private void setField(Condition[][] arr){
@@ -83,7 +85,9 @@ class TTField {
         }
     }
 
-    public void setCellXY(int x, int y, Condition condition) {
+    public void setCell(Coordinates coordinates, Condition condition) {
+        final int x = coordinates.x;
+        final int y = coordinates.y;
         if ( x > 3 || x < 1 || y > 3 || y < 1) {
             System.exit(1); //todo change to Exception;
         }
