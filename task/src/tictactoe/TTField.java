@@ -35,6 +35,10 @@ class TTField {
         }
     }
 
+    public TTField(short field) {
+        this.field = field;
+    }
+
     public Condition[][] toArray() {
         short f = this.field;
         Condition[][] res = new Condition[3][3];
@@ -90,13 +94,18 @@ class TTField {
         if ( x > 3 || x < 1 || y > 3 || y < 1) {
             System.exit(1); //todo change to Exception;
         }
-
+        //todo try to remake without array using
         Condition[][] arr = toArray();
         arr[y-1][x-1] = condition;
         setField(arr);
     }
 
-    public GameStatus getGameStatus() {
+    /*
+    * X - X is winner
+    * O - O is winner
+    * EMPTY - have't winner
+    * */
+    public Condition getWinner() {
         Condition[][] f= toArray();
         // check for wins
 
@@ -104,32 +113,46 @@ class TTField {
             //columns
             if (f[0][i] == f[1][i] && f[1][i] == f[2][i] && f[0][i] != EMPTY) {
                 if (f[0][i] == X) {
-                    return X_WIN;
+                    return X;
                 } else {
-                    return O_WIN;
+                    return O;
                 }
             }
             //rows
             if (f[i][0] == f[i][1] && f[i][1] == f[i][2] && f[i][0] != EMPTY) {
                 if (f[i][0] == X) {
-                    return X_WIN;
+                    return X;
                 } else {
-                    return O_WIN;
+                    return O;
                 }
             }
         }
 
         //diagonals
         if (((f[1][1] == f[0][0] && f[1][1] == f[2][2])
-            || (f[1][1] == f[0][2] && f[1][1] == f[2][0]))
-            && f[1][1] != EMPTY) {
+                || (f[1][1] == f[0][2] && f[1][1] == f[2][0]))
+                && f[1][1] != EMPTY) {
             if (f[1][1] == X) {
-                return X_WIN;
+                return X;
             } else {
-                return O_WIN;
+                return O;
             }
         }
+        return EMPTY;
+    }
 
+    public GameStatus getGameStatus() {
+
+        Condition winner = getWinner();
+
+        switch (winner) {
+            case X:
+                return X_WIN;
+            case O:
+                return O_WIN;
+        }
+
+        Condition[][] f= toArray();
         // check for finished and draw.
         int xCount = 0;
         int oCount = 0;
@@ -149,7 +172,7 @@ class TTField {
         if (xCount + oCount == 9) {
             return DRAW;
         }
-
+        // may be not representative when creating test fields
         if (xCount == oCount ) {
             return X_TURN;
         }

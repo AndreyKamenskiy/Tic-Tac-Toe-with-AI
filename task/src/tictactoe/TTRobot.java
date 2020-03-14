@@ -43,7 +43,7 @@ abstract class TTRobot {
         }
     }
 
-    abstract Coordinates getMove();
+    abstract protected Coordinates getMove();
 }
 
 class RobotFabrics {
@@ -54,6 +54,8 @@ class RobotFabrics {
                 return new RandomRobot(ttGame);
             case "user":
                 return new UserPlay(ttGame);
+            case "medium":
+                return new MediumRobot(ttGame);
         }
         return null;
     }
@@ -69,7 +71,7 @@ class RandomRobot extends TTRobot {
     }
 
     @Override
-    Coordinates getMove() {
+    protected Coordinates getMove() {
         ArrayList<Coordinates> emptyCoordinates = field.getEmpties();
         Coordinates res = emptyCoordinates.get((int)(Math.random() * emptyCoordinates.size()));
         System.out.println("Making move level \"easy\"");
@@ -86,7 +88,7 @@ class UserPlay extends TTRobot {
     }
 
     @Override
-    Coordinates getMove() {
+    protected Coordinates getMove() {
         Scanner scanner = new Scanner(System.in);
         int x = 0;
         int y = 0;
@@ -127,5 +129,50 @@ class UserPlay extends TTRobot {
     }
 
 }
+
+class MediumRobot extends TTRobot {
+
+    TTField field;
+
+    public MediumRobot(TTGame ttGame) {
+        super(ttGame);
+        field = ttGame.getField();
+    }
+
+    @Override
+    protected Coordinates getMove() {
+        Condition enemyPlayFor = wePlayFor == X ? O : X;
+        System.out.println("Making move level \"medium\"");
+        Coordinates enemysWinnerMove = null;
+        //Get possible moves
+        ArrayList<Coordinates> emptyCoordinates = field.getEmpties();
+        for (Coordinates currentMove : emptyCoordinates) {
+            //check for we wins
+            TTField newField = new TTField(field.getfiled());
+            newField.setCell(currentMove, wePlayFor);
+            //if we can winn - do it now
+            if (newField.getWinner() == wePlayFor) {
+                return currentMove;
+            }
+            //check for enemy wins if made this move
+            newField.setCell(currentMove, enemyPlayFor);
+            //if enemy could win making this move store this move to protect from him
+            // don't break the loop because we can win at next move
+            if (newField.getWinner() == enemyPlayFor) {
+                enemysWinnerMove = currentMove;
+            }
+        }
+
+        if (enemysWinnerMove != null) {
+            return enemysWinnerMove;
+        }
+
+        //if we can't win and enemy can't win at moment will make random move;
+        Coordinates res = emptyCoordinates.get((int)(Math.random() * emptyCoordinates.size()));
+
+        return res;
+    }
+}
+
 
 

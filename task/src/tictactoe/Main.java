@@ -1,6 +1,6 @@
 
 package tictactoe;
-//master from GitHub
+
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -15,7 +15,6 @@ public class Main {
             String command = null;
             String xDifficult = null;
             String oDifficult = null;
-
             boolean invalidCommand = true;
 
             while (invalidCommand) {
@@ -37,8 +36,8 @@ public class Main {
                             playGame = false;
                             break;
                         case "start":
-                            xDifficult = parseCommand.next("easy|user");
-                            oDifficult = parseCommand.next("easy|user");
+                            xDifficult = parseCommand.next("easy|user|medium");
+                            oDifficult = parseCommand.next("easy|user|medium");
                             invalidCommand = false;
                     }
                 } catch (NoSuchElementException e) {
@@ -54,7 +53,6 @@ public class Main {
 
                 ttGame.start();
             }
-
         }
     }
 }
