@@ -15,7 +15,6 @@ public class Main {
             String command = null;
             String xDifficult = null;
             String oDifficult = null;
-
             boolean invalidCommand = true;
 
             while (invalidCommand) {
@@ -54,7 +53,6 @@ public class Main {
 
                 ttGame.start();
             }
-
         }
     }
 }
