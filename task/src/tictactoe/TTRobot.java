@@ -1,27 +1,41 @@
 
 package tictactoe;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import static tictactoe.Condition.*;
 
 abstract class TTRobot {
     TTGame ttGame;
-    Condition wePlayFor;
+    Condition wePlayFor = null;
 
     TTRobot(TTGame ttGame) {
         this.ttGame = ttGame;
-        switch (ttGame.getStatus()) {
-            case X_TURN:
-                wePlayFor = X;
-                break;
-            case O_TURN:
-                wePlayFor = O;
-            default:
-                System.out.print("Initializing Robot error");
-                System.exit(1);
-        }
+
     }
 
-    public void makeMove(){
+    final public void makeMove(){
+        Condition currentTurn = null;
+        switch (ttGame.getStatus()) {
+            case X_TURN:
+                currentTurn = X;
+                break;
+            case O_TURN:
+                currentTurn = O;
+                break;
+            default:
+                System.out.print("Cannot make move");
+                System.exit(1);
+        }
+
+        if (wePlayFor == null) {
+            wePlayFor = currentTurn;
+        } else if (wePlayFor != currentTurn) {
+            System.out.print("Error making move. Players side was changing ");
+            System.exit(1);
+        }
+
         Move move = getMove();
         if (!ttGame.makeMove(move)) {
             System.out.print("Error making move");
@@ -31,3 +45,86 @@ abstract class TTRobot {
 
     abstract Move getMove();
 }
+
+class RobotFabrics {
+    static TTRobot CreateRobot(TTGame ttGame, String difficult) {
+        TTRobot robot;
+        switch (difficult) {
+            case "easy":
+                return new RandomRobot(ttGame);
+            case "user":
+                return new UserPlay(ttGame);
+        }
+        return null;
+    }
+}
+
+class RandomRobot extends TTRobot {
+
+    private TTField field;
+
+    RandomRobot(TTGame ttGame) {
+        super(ttGame);
+        field = ttGame.getField();
+    }
+
+    @Override
+    Move getMove() {
+        ArrayList<Move> emptyMove = field.getEmpties();
+        Move res = emptyMove.get((int)(Math.random() * emptyMove.size()));
+        System.out.println("Making move level \"easy\"");
+        return res;
+    }
+}
+
+class UserPlay extends TTRobot {
+    TTField field;
+
+    UserPlay(TTGame ttGame) {
+        super(ttGame);
+        field = ttGame.getField();
+    }
+
+    @Override
+    Move getMove() {
+        Scanner scanner = new Scanner(System.in);
+        int x = 0;
+        int y = 0;
+        boolean validAnswer = false;
+        do {
+            System.out.print("Enter the coordinates: ");
+            String coord = scanner.nextLine();
+            try {
+                String[] arr = coord.split("\\s+");
+                x = Integer.parseInt(arr[0]);
+                y = Integer.parseInt(arr[1]);
+
+            } catch (NumberFormatException e) {
+                System.out.println("You should enter numbers!");
+                continue;
+
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("You should enter 2 numbers!");
+                continue;
+            }
+
+            if ( x < 1 || x > 3 || y < 1 || y > 3) {
+                System.out.print("Coordinates should be from 1 to 3!\n");
+                continue;
+            }
+
+            if (!field.isCellXYEmpty(x, y)) {
+                System.out.print("This cell is occupied! Choose another one!\n");
+                continue;
+            }
+
+            validAnswer = true;
+
+        } while (!validAnswer);
+
+        return new Move(x, y);
+    }
+
+}
+
+

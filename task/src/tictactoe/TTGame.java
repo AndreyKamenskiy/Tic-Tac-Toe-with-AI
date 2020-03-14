@@ -5,11 +5,62 @@ import static tictactoe.Condition.*;
 
 public class TTGame {
     private TTField field;
-    Condition turn;
+    private Condition turn;
+    private TTRobot xPlayer = null;
+    private TTRobot oPlayer = null;
+
+    public void setPlayers(TTRobot xPlayer, TTRobot oPlayer) {
+        this.xPlayer= xPlayer;
+        this.oPlayer = oPlayer;
+    }
 
     TTGame() {
         field = new TTField("_________");
         turn = X;
+    }
+
+    public void start() {
+        //Ready to start?
+        if (xPlayer == null || oPlayer == null) {
+            System.out.print("Players are not initialized!");
+            System.exit(1);
+        }
+
+        //main Loop
+        boolean playGame = true;
+        Move move = null;
+        GameStatus status = GameStatus.X_TURN;
+
+        while (playGame) {
+
+            showfield();
+
+            switch (turn) {
+                case X:
+                    move = xPlayer.getMove();
+                    break;
+                case O:
+                    move = oPlayer.getMove();
+                    break;
+            }
+
+            if (!makeMove(move)) {
+                System.out.print("Error occupied when try to make move!");
+                System.exit(1);
+            }
+
+            status = getStatus();
+            switch (status) {
+                case X_WIN:
+                case O_WIN:
+                case DRAW:
+                    playGame = false;
+                    break;
+            }
+        }
+
+        showfield();
+        System.out.println(status);
     }
 
     public void showfield() {
