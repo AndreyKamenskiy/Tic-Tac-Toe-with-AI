@@ -84,34 +84,13 @@ public class TTGame {
         return field;
     }
 
-    public boolean makeMoveXY(int x, int y) {
-        if (!field.isCellXYEmpty(x, y)) {
-            return false;
-        }
-        Condition condition;
-        GameStatus status = field.getGameStatus();
-        switch (status) {
-            case X_TURN:
-                condition = X;
-                break;
-            case O_TURN:
-                condition = O;
-                break;
-            default:
-                return false;
-        }
-
-        field.setCellXY(x, y, condition);
-        return true;
-    }
-
     public GameStatus getStatus() {
         return field.getGameStatus();
     }
 
     public boolean makeMove(Coordinates coordinates) {
-        if (coordinates.isValid() && field.isCellXYEmpty(coordinates.x, coordinates.y)) {
-           field.setCellXY(coordinates.x , coordinates.y, turn);
+        if (coordinates.isValid() && field.isCellEmpty(coordinates)) {
+           field.setCell(coordinates, turn);
            nextTurn();
            return true;
         }
@@ -129,5 +108,4 @@ public class TTGame {
     public Condition getCurrentTurn() {
         return turn == X? X : O; // protect turn field.
     }
-
 }
