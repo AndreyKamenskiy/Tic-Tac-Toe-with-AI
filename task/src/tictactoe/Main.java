@@ -1,22 +1,63 @@
 
 package tictactoe;
 
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TTGame ttGame = new TTGame();
-        String xDifficult = "easy";
-        String oDifficult = "user";
-        //String oDifficult = "easy";
 
-        TTRobot xPlayer = RobotFabrics.CreateRobot(ttGame, xDifficult);
-        TTRobot oPlayer = RobotFabrics.CreateRobot(ttGame, oDifficult);
+        boolean playGame = true;
+        while (playGame){
+            String command = null;
+            String xDifficult = null;
+            String oDifficult = null;
 
-        ttGame.setPlayers(xPlayer, oPlayer);
+            boolean invalidCommand = true;
 
-        ttGame.start();
+            while (invalidCommand) {
+                System.out.print("Input command: ");
+                String input = scanner.nextLine();
+                Scanner parseCommand = new Scanner(input);
+
+                try {
+
+                    if (parseCommand.hasNext("start|exit")) {
+                        command = parseCommand.next();
+                    } else {
+                        throw new InputMismatchException("");
+                    }
+
+                    switch (command) {
+                        case "exit":
+                            invalidCommand = false;
+                            playGame = false;
+                            break;
+                        case "start":
+                            xDifficult = parseCommand.next("easy|user");
+                            oDifficult = parseCommand.next("easy|user");
+                            invalidCommand = false;
+                    }
+                } catch (NoSuchElementException e) {
+                    System.out.println("Bad parameters!");
+                }
+            }
+            if ("start".equals(command)) {
+                TTGame ttGame = new TTGame();
+                TTRobot xPlayer = RobotFabrics.CreateRobot(ttGame, xDifficult);
+                TTRobot oPlayer = RobotFabrics.CreateRobot(ttGame, oDifficult);
+
+                ttGame.setPlayers(xPlayer, oPlayer);
+
+                ttGame.start();
+            }
+
+        }
+
+
+
     }
 }
