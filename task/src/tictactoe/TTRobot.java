@@ -36,14 +36,14 @@ abstract class TTRobot {
             System.exit(1);
         }
 
-        Move move = getMove();
-        if (!ttGame.makeMove(move)) {
+        Coordinates coordinates = getMove();
+        if (!ttGame.makeMove(coordinates)) {
             System.out.print("Error making move");
             System.exit(1);
         }
     }
 
-    abstract Move getMove();
+    abstract Coordinates getMove();
 }
 
 class RobotFabrics {
@@ -69,9 +69,9 @@ class RandomRobot extends TTRobot {
     }
 
     @Override
-    Move getMove() {
-        ArrayList<Move> emptyMove = field.getEmpties();
-        Move res = emptyMove.get((int)(Math.random() * emptyMove.size()));
+    Coordinates getMove() {
+        ArrayList<Coordinates> emptyCoordinates = field.getEmpties();
+        Coordinates res = emptyCoordinates.get((int)(Math.random() * emptyCoordinates.size()));
         System.out.println("Making move level \"easy\"");
         return res;
     }
@@ -86,7 +86,7 @@ class UserPlay extends TTRobot {
     }
 
     @Override
-    Move getMove() {
+    Coordinates getMove() {
         Scanner scanner = new Scanner(System.in);
         int x = 0;
         int y = 0;
@@ -122,7 +122,7 @@ class UserPlay extends TTRobot {
 
         } while (!validAnswer);
 
-        return new Move(x, y);
+        return new Coordinates(x, y);
     }
 
 }

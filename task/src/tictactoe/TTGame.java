@@ -28,7 +28,7 @@ public class TTGame {
 
         //main Loop
         boolean playGame = true;
-        Move move = null;
+        Coordinates coordinates = null;
         GameStatus status = GameStatus.X_TURN;
 
         while (playGame) {
@@ -37,14 +37,14 @@ public class TTGame {
 
             switch (turn) {
                 case X:
-                    move = xPlayer.getMove();
+                    coordinates = xPlayer.getMove();
                     break;
                 case O:
-                    move = oPlayer.getMove();
+                    coordinates = oPlayer.getMove();
                     break;
             }
 
-            if (!makeMove(move)) {
+            if (!makeMove(coordinates)) {
                 System.out.print("Error occupied when try to make move!");
                 System.exit(1);
             }
@@ -109,9 +109,9 @@ public class TTGame {
         return field.getGameStatus();
     }
 
-    public boolean makeMove(Move move) {
-        if (move.isValid() && field.isCellXYEmpty(move.x, move.y)) {
-           field.setCellXY(move.x , move.y, turn);
+    public boolean makeMove(Coordinates coordinates) {
+        if (coordinates.isValid() && field.isCellXYEmpty(coordinates.x, coordinates.y)) {
+           field.setCellXY(coordinates.x , coordinates.y, turn);
            nextTurn();
            return true;
         }

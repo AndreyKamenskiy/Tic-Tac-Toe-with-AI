@@ -1,9 +1,9 @@
 package tictactoe;
 
-public class Move {
+public class Coordinates {
     public int x, y;
 
-    Move(int x, int y) {
+    Coordinates(int x, int y) {
         this.x = x;
         this.y = y;
     }

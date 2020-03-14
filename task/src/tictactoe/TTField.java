@@ -154,13 +154,13 @@ class TTField {
         return O_TURN;
     }
 
-    public ArrayList<Move> getEmpties() {
-        ArrayList<Move> res = new ArrayList<>();
+    public ArrayList<Coordinates> getEmpties() {
+        ArrayList<Coordinates> res = new ArrayList<>();
         Condition[][] array = toArray();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (array[i][j] == EMPTY) {
-                    res.add(new Move(j + 1, i + 1));
+                    res.add(new Coordinates(j + 1, i + 1));
                 }
             }
         }
