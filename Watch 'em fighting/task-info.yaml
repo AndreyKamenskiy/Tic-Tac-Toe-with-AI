@@ -299,6 +299,276 @@ files:
         }
     }
   learner_created: false
+- name: src/tictactoe/Condition.java
+  visible: true
+  text: |
+    package tictactoe;
+
+    enum Condition {
+        EMPTY('_', (short) 0),
+        X('X', (short) 1),
+        O('O', (short) 2);
+
+        private char name;
+        private short value;
+
+        Condition(char name, short value){
+            this.value = value;
+            this.name = name;
+        }
+
+        public short getValue() {
+            return value;
+        }
+
+        public char getName() {
+            return name;
+        }
+
+        public static short getValue(char name) {
+            for (Condition condition : Condition.values()) {
+                if (condition.getName() == name) {
+                    return condition.getValue();
+                }
+            }
+            return 0;
+        }
+
+        public static char getName(short value) {
+            for (Condition condition : Condition.values()) {
+                if (condition.getValue() == value) {
+                    return condition.getName();
+                }
+            }
+            return 0;
+        }
+
+        public static Condition getCondition(short value) {
+            for (Condition condition : Condition.values()) {
+                if (condition.getValue() == value) {
+                    return condition;
+                }
+            }
+            return EMPTY;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(name);
+        }
+    }
+  learner_created: true
+- name: src/tictactoe/TTGame.java
+  visible: true
+  text: |2
+
+    package tictactoe;
+
+    import static tictactoe.Condition.*;
+
+    public class TTGame {
+        private TTField field;
+        private Condition turn;
+        private TTRobot xPlayer = null;
+        private TTRobot oPlayer = null;
+
+        public void setPlayers(TTRobot xPlayer, TTRobot oPlayer) {
+            this.xPlayer= xPlayer;
+            this.oPlayer = oPlayer;
+        }
+
+        TTGame() {
+            field = new TTField("_________");
+            turn = X;
+        }
+
+        public void start() {
+            //Ready to start?
+            if (xPlayer == null || oPlayer == null) {
+                System.out.print("Players are not initialized!");
+                System.exit(1);
+            }
+
+            //main Loop
+            boolean playGame = true;
+            Coordinates coordinates = null;
+            GameStatus status = GameStatus.X_TURN;
+
+            while (playGame) {
+
+                showfield();
+
+                switch (turn) {
+                    case X:
+                        coordinates = xPlayer.getMove();
+                        break;
+                    case O:
+                        coordinates = oPlayer.getMove();
+                        break;
+                }
+
+                if (!makeMove(coordinates)) {
+                    System.out.print("Error occupied when try to make move!");
+                    System.exit(1);
+                }
+
+                status = getStatus();
+                switch (status) {
+                    case X_WIN:
+                    case O_WIN:
+                    case DRAW:
+                        playGame = false;
+                        break;
+                }
+            }
+
+            showfield();
+            System.out.println(status);
+        }
+
+        public void showfield() {
+            Condition[][] arr = field.toArray();
+            System.out.print("---------\n");
+            for (int i = 2; i > -1 ; i--) {
+                System.out.print("| ");
+                for (int j = 0; j < 3; j++) {
+                    System.out.print(arr[i][j] == EMPTY ? "  " : arr[i][j]+  " ");
+                }
+                System.out.print("|\n");
+            }
+            System.out.print("---------\n");
+        }
+
+        public void setField(String stringFormat) {
+            field = new TTField(stringFormat);
+        }
+
+        public TTField getField() {
+            return field;
+        }
+
+        public GameStatus getStatus() {
+            return field.getGameStatus();
+        }
+
+        public boolean makeMove(Coordinates coordinates) {
+            if (coordinates.isValid() && field.isCellEmpty(coordinates)) {
+               field.setCell(coordinates, turn);
+               nextTurn();
+               return true;
+            }
+            return false;
+        }
+
+        private void nextTurn() {
+            if (turn == X) {
+                turn = O;
+            } else {
+                turn = X;
+            }
+        }
+
+        public Condition getCurrentTurn() {
+            return turn == X? X : O; // protect turn field.
+        }
+
+    }
+  learner_created: true
+- name: src/tictactoe/TTField.java
+  visible: true
+  text: "package tictactoe;\n\nimport java.util.ArrayList;\n\nimport static tictactoe.Condition.*;\n\
+    import static tictactoe.GameStatus.*;\n\nclass TTField {\n    \n    //String field;\
+    \ // like \"XO___XO\"\n    short field; // 3^9 = 19683 so short will be enough;\n\
+    \    //lets take ternary system 0 = '_', 1=X ,2 = O\n\n    TTField (String stringFormat){\n\
+    \        /*\n        *  not logic string format\n        *  [13(s0) 23(s1) 33(s2)]\n\
+    \        *  [12(s3) 22(s4) 32(s5)]\n        *  [11(s6) 21(s7) 31(s8)]\n      \
+    \  *  */\n        int counter = 0;\n        short[][] f = new short[3][3];\n \
+    \       for (int i = 2; i >= 0; i--) {\n            for (int j = 0; j < 3; j++)\
+    \ {\n                f[i][j] = Condition.getValue(stringFormat.charAt(counter));\n\
+    //                System.out.printf(\"i=%d j=%d count=%d\\n\",i,j,counter);\n\
+    \                counter++;\n            }\n        }\n        field = 0;\n\n\
+    \        for (int i = 2; i >= 0; i--) {\n            for (int j = 2; j >= 0; j--)\
+    \ {\n                field = (short)((field * 3) + f[i][j]);\n            }\n\
+    \        }\n    }\n\n    public Condition[][] toArray() {\n        short f = this.field;\n\
+    \        Condition[][] res = new Condition[3][3];\n        for (int i = 0; i <\
+    \ 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                res[i][j]\
+    \ = Condition.getCondition((short)(f % 3));\n                f /= 3;\n       \
+    \     }\n        }\n        return res;\n    }\n\n    public short getfiled()\
+    \ {\n        return field;\n    }\n\n    /*\n    * x = 1..3, y = 1..3;\n     */\n\
+    \n    public Condition getCell(Coordinates coordinates) {\n        final int x\
+    \ = coordinates.x;\n        final int y = coordinates.y;\n\n        if ( x > 3\
+    \ || x < 1 || y > 3 || y < 1) {\n            System.exit(1); //todo change to\
+    \ Exception;\n        }\n        switch ((field / (short) Math.pow(3, (y - 1)\
+    \ * 3 + x - 1)) % 3) {\n            case 1:\n                return X;\n     \
+    \       case 2:\n                return O;\n        }\n        return EMPTY;\n\
+    \    }\n\n    public boolean isCellEmpty(Coordinates coordinates) {\n        return\
+    \ getCell(coordinates) == EMPTY;\n    }\n\n    private void setField(Condition[][]\
+    \ arr){\n        field = 0;\n        for (int i = 2; i >= 0; i--) {\n        \
+    \    for (int j = 2; j >= 0; j--) {\n                field = (short)((field *\
+    \ 3) + arr[i][j].getValue());\n            }\n        }\n    }\n\n    public void\
+    \ setCell(Coordinates coordinates, Condition condition) {\n        final int x\
+    \ = coordinates.x;\n        final int y = coordinates.y;\n        if ( x > 3 ||\
+    \ x < 1 || y > 3 || y < 1) {\n            System.exit(1); //todo change to Exception;\n\
+    \        }\n\n        Condition[][] arr = toArray();\n        arr[y-1][x-1] =\
+    \ condition;\n        setField(arr);\n    }\n\n    public GameStatus getGameStatus()\
+    \ {\n        Condition[][] f= toArray();\n        // check for wins\n\n      \
+    \  for (int i = 0; i < 3; i++) {\n            //columns\n            if (f[0][i]\
+    \ == f[1][i] && f[1][i] == f[2][i] && f[0][i] != EMPTY) {\n                if\
+    \ (f[0][i] == X) {\n                    return X_WIN;\n                } else\
+    \ {\n                    return O_WIN;\n                }\n            }\n   \
+    \         //rows\n            if (f[i][0] == f[i][1] && f[i][1] == f[i][2] &&\
+    \ f[i][0] != EMPTY) {\n                if (f[i][0] == X) {\n                 \
+    \   return X_WIN;\n                } else {\n                    return O_WIN;\n\
+    \                }\n            }\n        }\n\n        //diagonals\n        if\
+    \ (((f[1][1] == f[0][0] && f[1][1] == f[2][2])\n            || (f[1][1] == f[0][2]\
+    \ && f[1][1] == f[2][0]))\n            && f[1][1] != EMPTY) {\n            if\
+    \ (f[1][1] == X) {\n                return X_WIN;\n            } else {\n    \
+    \            return O_WIN;\n            }\n        }\n\n        // check for finished\
+    \ and draw.\n        int xCount = 0;\n        int oCount = 0;\n        for (int\
+    \ i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n          \
+    \      switch (f[i][j]) {\n                    case X:\n                     \
+    \   xCount++;\n                        break;\n                    case O:\n \
+    \                       oCount++;\n                        break;\n          \
+    \      }\n            }\n        }\n\n        if (xCount + oCount == 9) {\n  \
+    \          return DRAW;\n        }\n\n        if (xCount == oCount ) {\n     \
+    \       return X_TURN;\n        }\n\n        return O_TURN;\n    }\n\n    public\
+    \ ArrayList<Coordinates> getEmpties() {\n        ArrayList<Coordinates> res =\
+    \ new ArrayList<>();\n        Condition[][] array = toArray();\n        for (int\
+    \ i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n          \
+    \      if (array[i][j] == EMPTY) {\n                    res.add(new Coordinates(j\
+    \ + 1, i + 1));\n                }\n            }\n        }\n        return res;\n\
+    \    }\n\n}\n"
+  learner_created: true
+- name: src/tictactoe/GameStatus.java
+  visible: true
+  text: |
+    package tictactoe;
+
+    public enum GameStatus {
+        X_TURN("Game not finished"),
+        O_TURN("Game not finished"),
+        DRAW("Draw"),
+        X_WIN("X wins"),
+        O_WIN("O wins ");
+
+        private String name;
+
+        GameStatus(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+  learner_created: true
+- name: src/tictactoe/TTRobot.java
+  visible: true
+  learner_created: true
+- name: src/tictactoe/Coordinates.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/81/stages/449/implement
-status: Unchecked
-record: -1
+status: Solved
+record: 3

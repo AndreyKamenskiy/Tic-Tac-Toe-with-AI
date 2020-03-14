@@ -34,8 +34,15 @@ public class TTGame {
         while (playGame) {
 
             showfield();
-
             switch (turn) {
+                case X:
+                   xPlayer.makeMove();
+                    break;
+                case O:
+                    oPlayer.makeMove();
+                    break;
+            }
+            /*switch (turn) {
                 case X:
                     coordinates = xPlayer.getMove();
                     break;
@@ -47,7 +54,7 @@ public class TTGame {
             if (!makeMove(coordinates)) {
                 System.out.print("Error occupied when try to make move!");
                 System.exit(1);
-            }
+            }*/
 
             status = getStatus();
             switch (status) {

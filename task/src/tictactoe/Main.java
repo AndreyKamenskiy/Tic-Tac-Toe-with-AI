@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
-// develop from GitHub
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -37,8 +37,8 @@ public class Main {
                             playGame = false;
                             break;
                         case "start":
-                            xDifficult = parseCommand.next("easy|user");
-                            oDifficult = parseCommand.next("easy|user");
+                            xDifficult = parseCommand.next("easy|user|medium");
+                            oDifficult = parseCommand.next("easy|user|medium");
                             invalidCommand = false;
                     }
                 } catch (NoSuchElementException e) {
