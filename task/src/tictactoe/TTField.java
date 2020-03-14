@@ -6,7 +6,6 @@ import static tictactoe.Condition.*;
 import static tictactoe.GameStatus.*;
 
 class TTField {
-    
     //String field; // like "XO___XO"
     short field; // 3^9 = 19683 so short will be enough;
     //lets take ternary system 0 = '_', 1=X ,2 = O

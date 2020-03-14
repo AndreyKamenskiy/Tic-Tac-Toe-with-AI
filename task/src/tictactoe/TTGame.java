@@ -108,5 +108,4 @@ public class TTGame {
     public Condition getCurrentTurn() {
         return turn == X? X : O; // protect turn field.
     }
-
 }

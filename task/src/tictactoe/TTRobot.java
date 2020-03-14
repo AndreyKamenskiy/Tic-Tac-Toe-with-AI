@@ -114,6 +114,7 @@ class UserPlay extends TTRobot {
             }
 
             if (!field.isCellEmpty(new Coordinates(x, y))) {
+
                 System.out.print("This cell is occupied! Choose another one!\n");
                 continue;
             }
