@@ -1,9 +1,13 @@
 package tictactoe;
 
+import java.util.ArrayList;
+
 import static tictactoe.Condition.*;
 import static tictactoe.GameStatus.*;
 
 class TTField {
+
+    //TODO: replace everywhere XY for Move;
     //String field; // like "XO___XO"
     short field; // 3^9 = 19683 so short will be enough;
     //lets take ternary system 0 = '_', 1=X ,2 = O
@@ -148,6 +152,19 @@ class TTField {
         }
 
         return O_TURN;
+    }
+
+    public ArrayList<Coordinates> getEmpties() {
+        ArrayList<Coordinates> res = new ArrayList<>();
+        Condition[][] array = toArray();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (array[i][j] == EMPTY) {
+                    res.add(new Coordinates(j + 1, i + 1));
+                }
+            }
+        }
+        return res;
     }
 
 }

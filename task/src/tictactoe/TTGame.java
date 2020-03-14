@@ -5,10 +5,63 @@ import static tictactoe.Condition.*;
 
 public class TTGame {
     private TTField field;
-    TTGame() {
-        field = new TTField("_________");
+    private Condition turn;
+    private TTRobot xPlayer = null;
+    private TTRobot oPlayer = null;
+
+    public void setPlayers(TTRobot xPlayer, TTRobot oPlayer) {
+        this.xPlayer= xPlayer;
+        this.oPlayer = oPlayer;
     }
 
+    TTGame() {
+        field = new TTField("_________");
+        turn = X;
+    }
+
+    public void start() {
+        //Ready to start?
+        if (xPlayer == null || oPlayer == null) {
+            System.out.print("Players are not initialized!");
+            System.exit(1);
+        }
+
+        //main Loop
+        boolean playGame = true;
+        Coordinates coordinates = null;
+        GameStatus status = GameStatus.X_TURN;
+
+        while (playGame) {
+
+            showfield();
+
+            switch (turn) {
+                case X:
+                    coordinates = xPlayer.getMove();
+                    break;
+                case O:
+                    coordinates = oPlayer.getMove();
+                    break;
+            }
+
+            if (!makeMove(coordinates)) {
+                System.out.print("Error occupied when try to make move!");
+                System.exit(1);
+            }
+
+            status = getStatus();
+            switch (status) {
+                case X_WIN:
+                case O_WIN:
+                case DRAW:
+                    playGame = false;
+                    break;
+            }
+        }
+
+        showfield();
+        System.out.println(status);
+    }
 
     public void showfield() {
         Condition[][] arr = field.toArray();
@@ -55,4 +108,26 @@ public class TTGame {
     public GameStatus getStatus() {
         return field.getGameStatus();
     }
+
+    public boolean makeMove(Coordinates coordinates) {
+        if (coordinates.isValid() && field.isCellXYEmpty(coordinates.x, coordinates.y)) {
+           field.setCellXY(coordinates.x , coordinates.y, turn);
+           nextTurn();
+           return true;
+        }
+        return false;
+    }
+
+    private void nextTurn() {
+        if (turn == X) {
+            turn = O;
+        } else {
+            turn = X;
+        }
+    }
+
+    public Condition getCurrentTurn() {
+        return turn == X? X : O; // protect turn field.
+    }
+
 }
