@@ -5,10 +5,12 @@ import static tictactoe.Condition.*;
 
 public class TTGame {
     private TTField field;
+    Condition turn;
+
     TTGame() {
         field = new TTField("_________");
+        turn = X;
     }
-
 
     public void showfield() {
         Condition[][] arr = field.toArray();
@@ -55,4 +57,26 @@ public class TTGame {
     public GameStatus getStatus() {
         return field.getGameStatus();
     }
+
+    public boolean makeMove(Move move) {
+        if (move.isValid() && field.isCellXYEmpty(move.x, move.y)) {
+           field.setCellXY(move.x , move.y, turn);
+           nextTurn();
+           return true;
+        }
+        return false;
+    }
+
+    private void nextTurn() {
+        if (turn == X) {
+            turn = O;
+        } else {
+            turn = X;
+        }
+    }
+
+    public Condition getCurrentTurn() {
+        return turn == X? X : O; // protect turn field.
+    }
+
 }
