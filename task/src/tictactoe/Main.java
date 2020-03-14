@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
-
+// develop from GitHub
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
