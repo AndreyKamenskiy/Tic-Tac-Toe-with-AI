@@ -258,4 +258,3 @@ class MiniMaxRobot extends TTRobot {
 
 }
 
-

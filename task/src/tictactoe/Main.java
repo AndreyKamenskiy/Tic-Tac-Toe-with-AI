@@ -15,7 +15,6 @@ public class Main {
             String command = null;
             String xDifficult = null;
             String oDifficult = null;
-
             boolean invalidCommand = true;
 
             while (invalidCommand) {
@@ -37,8 +36,10 @@ public class Main {
                             playGame = false;
                             break;
                         case "start":
+
                             xDifficult = parseCommand.next("easy|user|medium|hard");
                             oDifficult = parseCommand.next("easy|user|medium|hard");
+
                             invalidCommand = false;
                     }
                 } catch (NoSuchElementException e) {
@@ -54,7 +55,6 @@ public class Main {
 
                 ttGame.start();
             }
-
         }
     }
 }

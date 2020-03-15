@@ -25,6 +25,7 @@ class TicTacToeField {
     final FieldState[][] field;
 
     TicTacToeField(FieldState[][] field) {
+
         this.field = new FieldState[3][3];
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
