@@ -76,7 +76,9 @@ class RandomRobot extends TTRobot {
     protected Coordinates getMove() {
         ArrayList<Coordinates> emptyCoordinates = field.getEmpties();
         Coordinates res = emptyCoordinates.get((int)(Math.random() * emptyCoordinates.size()));
-        System.out.println("Making move level \"easy\"");
+
+        if (!ttGame.isSilentMode())
+            System.out.println("Making move level \"easy\"");
         return res;
     }
 }
@@ -144,7 +146,10 @@ class MediumRobot extends TTRobot {
     @Override
     protected Coordinates getMove() {
         Condition enemyPlayFor = wePlayFor == X ? O : X;
-        System.out.println("Making move level \"medium\"");
+
+
+        if (!ttGame.isSilentMode())
+            System.out.println("Making move level \"medium\"");
         Coordinates enemysWinnerMove = null;
         //Get possible moves
         ArrayList<Coordinates> emptyCoordinates = field.getEmpties();
@@ -221,7 +226,9 @@ class MiniMaxRobot extends TTRobot {
     @Override
     protected Coordinates getMove() {
         enemyPlayFor = wePlayFor == X ? O : X;
-        System.out.println("Making move level \"hard\"");
+
+        if (!ttGame.isSilentMode())
+            System.out.println("Making move level \"hard\"");
         Coordinates move = null;
 
         // max score move will be the best.
