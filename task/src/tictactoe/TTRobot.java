@@ -56,6 +56,8 @@ class RobotFabrics {
                 return new UserPlay(ttGame);
             case "medium":
                 return new MediumRobot(ttGame);
+            case "hard":
+                return new MiniMaxRobot(ttGame);
         }
         return null;
     }
@@ -168,11 +170,84 @@ class MediumRobot extends TTRobot {
         }
 
         //if we can't win and enemy can't win at moment will make random move;
-        Coordinates res = emptyCoordinates.get((int)(Math.random() * emptyCoordinates.size()));
+        return emptyCoordinates.get((int)(Math.random() * emptyCoordinates.size()));
 
-        return res;
     }
 }
 
+class MiniMaxRobot extends TTRobot {
 
+    TTField field;
+    Condition enemyPlayFor;
+
+    public MiniMaxRobot(TTGame ttGame) {
+        super(ttGame);
+        field = ttGame.getField();
+    }
+
+    private int miniMax(TTField checkedField, Condition turn, boolean findMax) {
+        //End of the game?
+        Condition winner = checkedField.getWinner();
+        if (winner == wePlayFor) {
+            return 1; // if we won return 1 score;
+        } else if (winner == enemyPlayFor) {
+            return -1; // enemy won
+        } else if (!checkedField.haveEmpties()) {
+            return 0; // have't empty moves, have't winner - it is a tie.
+        }
+
+        // if this not the end of the game.
+        int score = findMax ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+        //Get possible moves
+        ArrayList<Coordinates> emptyCoordinates = checkedField.getEmpties();
+        for (Coordinates currentMove : emptyCoordinates) {
+            //make new field;
+            TTField newField = new TTField(checkedField.getfiled());
+
+            //make new move;
+            newField.setCell(currentMove, turn);
+
+            int currentScore = miniMax(newField, turn == X ? O : X, !findMax);
+
+            if (findMax && currentScore > score || !findMax && currentScore < score) {
+                score = currentScore;
+            }
+
+        }
+        return score;
+    }
+
+    @Override
+    protected Coordinates getMove() {
+        enemyPlayFor = wePlayFor == X ? O : X;
+        System.out.println("Making move level \"hard\"");
+        Coordinates move = null;
+
+        // max score move will be the best.
+        int score = Integer.MIN_VALUE;
+        Coordinates res = null;
+
+        //Get possible moves
+        ArrayList<Coordinates> emptyCoordinates = field.getEmpties();
+        for (Coordinates currentMove : emptyCoordinates) {
+            //make new field;
+            TTField newField = new TTField(field.getfiled());
+            //make new move;
+            newField.setCell(currentMove, wePlayFor);
+
+            //start minimax for our current move. enemy will play, he will find the minimum score. findMax = false;
+            int currentScore = miniMax(newField, enemyPlayFor, false);
+
+            if (currentScore > score) {
+                score = currentScore;
+                res = currentMove;
+            }
+
+        }
+
+        return res;
+    }
+
+}
 

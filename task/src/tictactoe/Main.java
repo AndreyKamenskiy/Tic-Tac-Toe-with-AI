@@ -36,8 +36,10 @@ public class Main {
                             playGame = false;
                             break;
                         case "start":
-                            xDifficult = parseCommand.next("easy|user|medium");
-                            oDifficult = parseCommand.next("easy|user|medium");
+
+                            xDifficult = parseCommand.next("easy|user|medium|hard");
+                            oDifficult = parseCommand.next("easy|user|medium|hard");
+
                             invalidCommand = false;
                     }
                 } catch (NoSuchElementException e) {

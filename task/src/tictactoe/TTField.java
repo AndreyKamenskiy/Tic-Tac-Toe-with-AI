@@ -193,4 +193,15 @@ class TTField {
         return res;
     }
 
+    public boolean haveEmpties() {
+        short f = this.field;
+        for (int i = 0; i < 9; i++) {
+                if (f % 3 == EMPTY.getValue()) {
+                    return true;
+                }
+                f /= 3;
+        }
+        return false;
+    }
+
 }
