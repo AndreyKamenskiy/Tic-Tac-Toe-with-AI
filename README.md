@@ -2,10 +2,10 @@
 project from hyperskill
 
 
-### Combats table for 50 combats each line
+## Combats table for 50 combats each line
 
 Combats make class RobotsCombat 
-
+```
 -------------------------------------------------------------
 | X difficult  | O difficult  | X win   | O win   | Draw    |                                                                                 
 -------------------------------------------------------------
@@ -26,4 +26,4 @@ Combats make class RobotsCombat
 | easy         | medium       | 3       | 33      | 14      |                                                            
 -------------------------------------------------------------
 | easy         | easy         | 32      | 12      | 6       |                                                          
--------------------------------------------------------------
+-------------------------------------------------------------```
