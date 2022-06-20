@@ -1,9 +1,15 @@
 # Tic-Tac-Toe-with-AI
 project from hyperskill
+https://hyperskill.org/projects/81?track=17
 
+Console game with AI implementing minimax algorithm.
+
+## Used technologies
+ - OOP;
+ - Minimax algorithm;
 
 ## Combats table for 50 combats each line
-
+Robot vs robot competition.
 Combats make class RobotsCombat 
 ```
 -------------------------------------------------------------
